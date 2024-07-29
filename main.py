@@ -1,9 +1,9 @@
-from fastapi import FastAPI, Response
-from fastapi.responses import StreamingResponse
 import cv2
-import numpy as np
+from fastapi import FastAPI
+from fastapi.responses import StreamingResponse
 
 app = FastAPI()
+
 
 def generate_video():
     cap = cv2.VideoCapture(0)  # Access the webcam (0 is the default camera)
@@ -24,10 +24,13 @@ def generate_video():
 
     cap.release()
 
+
 @app.get("/stream")
 def stream():
     return StreamingResponse(generate_video(), media_type="multipart/x-mixed-replace; boundary=frame")
 
+
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)
